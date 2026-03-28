@@ -5,19 +5,41 @@ local Yellow = Color3.fromHex("#ECA201")
 local Green = Color3.fromHex("#10C550")
 local Blue = Color3.fromHex("#257AF7")
 
-local autoClickDropper = false
+local autoCash = false
+local autoBronze = false
 local autoCollectCoins = false
+local autoAttack = false
+local autoChopTree = false
+local isRunning = true
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Remotes = ReplicatedStorage:WaitForChild("Remotes")
 local DropperClickRemote = Remotes:WaitForChild("DropperClick")
+local BronzeDropperClickRemote = Remotes:WaitForChild("BronzeDropperClick")
 local CollectPartRemote = Remotes:WaitForChild("CollectPart")
+local MobAttackMltRemote = Remotes:WaitForChild("MobAttackMlt")
+local TreeHitRemote = Remotes:WaitForChild("TreeHit")
 
 task.spawn(function()
-	while true do
-		if autoClickDropper then
+	while isRunning do
+		if autoCash then
 			pcall(function()
 				DropperClickRemote:FireServer()
+			end)
+		end
+		if autoBronze then
+			pcall(function()
+				BronzeDropperClickRemote:FireServer()
+			end)
+		end
+		if autoAttack then
+			pcall(function()
+				MobAttackMltRemote:FireServer()
+			end)
+		end
+		if autoChopTree then
+			pcall(function()
+				TreeHitRemote:FireServer()
 			end)
 		end
 		task.wait()
@@ -40,6 +62,7 @@ local Window = WindUI:CreateWindow({
 	Icon = "solar:gamepad-bold",
 	NewElements = true,
 	HideSearchBar = false,
+	Size = UDim2.fromOffset(650, 450),
 	Topbar = {
 		Height = 44,
 		ButtonsType = "Mac",
@@ -72,21 +95,28 @@ local MainTab = MainSection:Tab({
 	Border = true,
 })
 
+MainTab:Section({
+	Title = "Droppers"
+})
+
 local DropperGroup = MainTab:Group()
 
 DropperGroup:Toggle({
-	Title = "Auto Click dropper",
+	Title = "Auto Cash",
 	Callback = function(state)
-		autoClickDropper = state
+		autoCash = state
 	end,
 })
 
-local TreeGroup = MainTab:Group()
-
-TreeGroup:Toggle({
-	Title = "Auto Chop tree",
+DropperGroup:Toggle({
+	Title = "Auto Bronze",
 	Callback = function(state)
+		autoBronze = state
 	end,
+})
+
+MainTab:Section({
+	Title = "Farming"
 })
 
 local CoinsGroup = MainTab:Group()
@@ -102,6 +132,37 @@ CoinsGroup:Toggle({
 		end
 	end,
 })
+
+local TreeGroup = MainTab:Group()
+
+TreeGroup:Toggle({
+	Title = "Auto Chop tree",
+	Callback = function(state)
+		autoChopTree = state
+	end,
+})
+
+local AttackGroup = MainTab:Group()
+
+AttackGroup:Toggle({
+	Title = "Auto Attack",
+	Callback = function(state)
+		autoAttack = state
+	end,
+})
+
+if type(Window.Destroy) == "function" then
+	local oldDestroy = Window.Destroy
+	Window.Destroy = function(self, ...)
+		isRunning = false
+		autoCash = false
+		autoBronze = false
+		autoCollectCoins = false
+		autoAttack = false
+		autoChopTree = false
+		return oldDestroy(self, ...)
+	end
+end
 
 pcall(function()
 	MainTab:Select()
