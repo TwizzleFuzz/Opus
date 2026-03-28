@@ -36,6 +36,7 @@ workspace.DescendantAdded:Connect(tryCollect)
 
 local Window = WindUI:CreateWindow({
 	Title = "Opus | Dropper Incremental",
+	Folder = "Opus/Dropper Incremental",
 	Icon = "solar:gamepad-bold",
 	NewElements = true,
 	HideSearchBar = false,
