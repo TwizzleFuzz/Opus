@@ -143,21 +143,8 @@ end)
 task.spawn(function()
 	while isRunning do
 		if rangeRock then
-			local char = Players.LocalPlayer.Character
-			local hrp  = char and char:FindFirstChild("HumanoidRootPart")
-			
-			local map    = workspace:FindFirstChild("GrassMap")
-			local nature = map and map:FindFirstChild("Nature")
-			local rocks  = nature and nature:FindFirstChild("Rocks")
-			local rock   = rocks and rocks:FindFirstChild("LowPolyMossyRockOne")
-			
-			if hrp and rock then
-				pcall(function() SetOreRemote:FireServer(rock) end)
-				pcall(function() SetOreRemote:FireServer(rock.Name) end) 
-				
-				pcall(function() RockAttackStateRemote:FireServer(true) end)
-				pcall(function() RockDamagedRemote:FireServer() end)
-			end
+			pcall(function() RockAttackStateRemote:FireServer(true) end)
+			pcall(function() RockDamagedRemote:FireServer() end)
 		end
 		task.wait(0.1)
 	end
