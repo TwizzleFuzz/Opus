@@ -314,6 +314,9 @@ RangeGroup:Toggle({
 	Title = "Rock",
 	Callback = function(state) 
 		rangeRock = state 
+		if not state then
+			pcall(function() RockAttackStateRemote:FireServer(false) end)
+		end
 	end,
 })
 
